@@ -37,8 +37,12 @@ module.exports = function(deployer) {
     deployer.deploy(TranscodeJobs);
     deployer.link(TranscodeJobs, LivepeerProtocol);
 
+    deployer.deploy(IdentityVerifier);
+    deployer.link(IdentityVerifier, LivepeerProtocol);
+
     deployer.deploy(LivepeerToken);
     deployer.link(LivepeerToken, LivepeerProtocol);
     deployer.link(TranscoderPools, LivepeerProtocol);
     deployer.deploy(LivepeerProtocol, 1, 50, 2);
+
 };

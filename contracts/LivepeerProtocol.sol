@@ -5,6 +5,7 @@ import "./TranscoderPools.sol";
 import "./Node.sol";
 import "./TranscodeJobs.sol";
 import '../installed_contracts/zeppelin/contracts/SafeMath.sol';
+import "./verification/IdentityVerifier.sol";
 
 contract LivepeerProtocol {
     using SafeMath for uint256;
@@ -16,6 +17,9 @@ contract LivepeerProtocol {
 
     // Truebit address
     address public truebitAddress;
+
+    // Verification contract address - may replace truebitAddress above
+    address public verificationContract;
 
     /* Token constants */
 
@@ -157,8 +161,9 @@ contract LivepeerProtocol {
         // Deploy new token contract
         token = new LivepeerToken();
 
-        // Set truebit address
+        // Set truebit address and verification address
         truebitAddress = 0x647167a598171d06aecf0f5fa1daf3c5cc848df0;
+        verificationContract = new IdentityVerifier();
 
         // Initialize parameters
         // Segment length of 2 seconds
@@ -611,7 +616,10 @@ contract LivepeerProtocol {
 
         // Invoke transcoding verification process. This is async and will result in a callback
         // to receiveVerification() which is implemented in this contract.
-        verificationContract.verify(_jobID, _segmentSequenceNumber, verificationCodeHash, _dataHash, self);
+        bytes32 verificationCodeHash = 0x2222;
+
+        // The below call was erroring that it couldn't find `verify()` for some reason.
+        //verificationContract.verify(_jobId, _segmentSequenceNumber, verificationCodeHash, _dataHash, this);
 
         return true;
     }
