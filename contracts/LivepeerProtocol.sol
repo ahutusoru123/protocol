@@ -609,7 +609,9 @@ contract LivepeerProtocol {
     function verify(uint256 _jobId, uint256 _segmentSequenceNumber, bytes32 _dataHash, bytes32 _transcodedDataHash, bytes _broadcasterSig, bytes _proof) returns (bool) {
         if (!jobs.verify(_jobId, _segmentSequenceNumber, _dataHash, _transcodedDataHash, _broadcasterSig, _proof, verificationRate)) throw;
 
-        // TODO: Invoke transcoding verification process
+        // Invoke transcoding verification process. This is async and will result in a callback
+        // to receiveVerification() which is implemented in this contract.
+        verificationContract.verify(_jobID, _segmentSequenceNumber, verificationCodeHash, _dataHash, self);
 
         return true;
     }
